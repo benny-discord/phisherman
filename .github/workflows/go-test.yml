@@ -17,7 +17,7 @@ jobs:
           go-version: 1.17
 
       - name: go build
-        run: go run build.go --build-only=true
+        run: go build
 
   govet:
     # We want to run on external PRs, but not on our own internal PRs as they'll be run
