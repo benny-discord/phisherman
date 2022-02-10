@@ -21,6 +21,18 @@ func MakeClient() *Client {
 	}
 }
 
+func processResponse(resp *resty.Response, err error) (*resty.Response, error) {
+	if err != nil {
+		return nil, err
+	}
+
+	if !resp.IsSuccess() {
+		return nil, errors.New("unexpected response code (" + resp.Status() + "), body:" + resp.String())
+	}
+
+	return resp, nil
+}
+
 // CheckDomain returns the CheckDomainResponse for a given domain
 func (c *Client) CheckDomain(domain string, token string) (*CheckDomainResponse, error) {
 	if domain == "" {
@@ -34,10 +46,10 @@ func (c *Client) CheckDomain(domain string, token string) (*CheckDomainResponse,
 		return nil, err
 	}
 	var r CheckDomainResponse
-	_, err = c.client.R().
+	_, err = processResponse(c.client.R().
 		SetHeader("Authorization", "Bearer "+token).
 		SetResult(&r).
-		Get(strings.Replace(CheckDomainRoute, "{domain}", u.Host, 1))
+		Get(strings.Replace(CheckDomainRoute, "{domain}", u.Host, 1)))
 
 	return &r, err
 }
@@ -54,14 +66,14 @@ func (c *Client) FetchDomainInfo(domain string, token string) (*FetchDomainInfoR
 		return nil, err
 	}
 	var d map[string]FetchDomainInfoResponse
-	_, err = c.client.R().
+	_, err = processResponse(c.client.R().
 		SetHeader("Authorization", "Bearer "+token).
-		SetResult(d).
-		Get(strings.Replace(FetchDomainRoute, "{domain}", u.Host, 1))
-
-	var r FetchDomainInfoResponse
+		SetResult(&d).
+		Get(strings.Replace(FetchDomainRoute, "{domain}", u.Host, 1)))
 	if err != nil {
-		r = d[u.Host]
+		return nil, err
 	}
+
+	r := d[u.Host]
 	return &r, err
 }
