@@ -15,23 +15,14 @@ type Client struct {
 }
 
 // MakeClient initialises a new Client.
-func MakeClient(baseAPIKey string) (*Client, error) {
-	if baseAPIKey == "" {
-		return nil, errors.New("missing base API Key")
-	}
+func MakeClient() *Client {
 	return &Client{
-		client:     resty.New(),
-		baseAPIKey: baseAPIKey,
-	}, nil
-}
-
-// BaseAPIKey returns the base API Key of the Client.
-func (c *Client) BaseAPIKey() string {
-	return c.baseAPIKey
+		client: resty.New(),
+	}
 }
 
 // CheckDomain returns the CheckDomainResponse for a given domain
-func (c *Client) CheckDomain(domain string) (*CheckDomainResponse, error) {
+func (c *Client) CheckDomain(domain string, token string) (*CheckDomainResponse, error) {
 	if domain == "" {
 		return nil, errors.New("missing domain")
 	}
@@ -44,14 +35,14 @@ func (c *Client) CheckDomain(domain string) (*CheckDomainResponse, error) {
 	}
 	var r CheckDomainResponse
 	_, err = c.client.R().
-		SetHeader("Authorization", c.baseAPIKey).
+		SetHeader("Authorization", "Bearer "+token).
 		SetResult(&r).
 		Get(strings.Replace(CheckDomainRoute, "{domain}", u.Host, 1))
 
 	return &r, err
 }
 
-func (c *Client) FetchDomainInfo(domain string) (*FetchDomainInfoResponse, error) {
+func (c *Client) FetchDomainInfo(domain string, token string) (*FetchDomainInfoResponse, error) {
 	if domain == "" {
 		return nil, errors.New("missing domain")
 	}
@@ -64,7 +55,7 @@ func (c *Client) FetchDomainInfo(domain string) (*FetchDomainInfoResponse, error
 	}
 	var d map[string]FetchDomainInfoResponse
 	_, err = c.client.R().
-		SetHeader("Authorization", "Bearer "+c.baseAPIKey).
+		SetHeader("Authorization", "Bearer "+token).
 		SetResult(d).
 		Get(strings.Replace(FetchDomainRoute, "{domain}", u.Host, 1))
 
