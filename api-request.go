@@ -8,12 +8,10 @@ type BulkReportDomainBody map[string]BulkReportDomainList
 // BulkReportDomainList is a map of each domain to report, and contains an array of the timestamp of each usage
 type BulkReportDomainList map[string][]int
 
-// ReportDomainBody is used for reporting a phishing domain being sent
-type ReportDomainBody struct {
-	Domain string `json:"domain"`
+type reportNewPhishBody struct {
+	URL string `json:"url"`
 }
 
-// ReportNewPhishBody is used for reporting a new phishing domain being located
-type ReportNewPhishBody struct {
-	URL string `json:"url"`
+type reportDomainBody struct {
+	GuildID int `json:"guild"`
 }
