@@ -84,10 +84,10 @@ fmt.Println("Success")
 [Docs](https://docs.phisherman.gg/api/v2/catching-a-phish.html#bulk-reporting)
 ```go
 body := phisherman_api.BulkReportDomainBody{
-	"MY_USER_API_KEY": phisherman_api.BulkReportDomainList{
-		"DOMAIN_TO_REPORT":   []int{/*my int timestamp of each usage goes here*/},
-		"DOMAIN_TO_REPORT_2": []int{1635591333, 1635591334, 1635591335 /*3 reported uses*/},
-	},
+    "MY_USER_API_KEY": phisherman_api.BulkReportDomainList{
+        "DOMAIN_TO_REPORT":   []int{/*my int timestamp of each usage goes here*/},
+        "DOMAIN_TO_REPORT_2": []int{1635591333, 1635591334, 1635591335 /*3 reported uses*/},
+    },
     "MY_USER_API_KEY_2": phisherman_api.BulkReportDomainList{
         "DOMAIN_TO_REPORT_3": []int{1635591332 /* 1 reported use */},
         "DOMAIN_TO_REPORT_4": []int{1635591333, 1635591334 /* 2 reported uses */},
