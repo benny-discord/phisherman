@@ -1,4 +1,4 @@
-package phisherman_api
+package phisherman
 
 // BulkReportDomainBody is used for the bulk report endpoint
 //

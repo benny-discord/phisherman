@@ -1,4 +1,4 @@
-package phisherman_api
+package phisherman
 
 import "time"
 
@@ -21,12 +21,12 @@ type CheckDomainResponse struct {
 // FetchDomainInfoResponse is the body of the fetch domain info endpoint
 type FetchDomainInfoResponse struct {
 	Status         *string         `json:"status"`
-	LastChecked    *PhishermanTime `json:"lastChecked"`
+	LastChecked    *Time           `json:"lastChecked"`
 	VerifiedPhish  *bool           `json:"verifiedPhish"`
 	Classification *Classification `json:"classification"`
-	Created        *PhishermanTime `json:"created"`
-	FirstSeen      *PhishermanTime `json:"firstSeen"`
-	LastSeen       *PhishermanTime `json:"lastSeen"`
+	Created        *Time           `json:"created"`
+	FirstSeen      *Time           `json:"firstSeen"`
+	LastSeen       *Time           `json:"lastSeen"`
 	TargetedBrand  *string         `json:"targetedBrand"`
 	Details        *Details        `json:"details"`
 }
@@ -56,19 +56,19 @@ type Country struct {
 	Name string `json:"name"`
 }
 
-// PhishermanTime is used for handling the time formats returned by the Phisherman API
-type PhishermanTime struct {
+// Time is used for handling the time formats returned by the Phisherman API
+type Time struct {
 	time.Time
 }
 
 // UnmarshalJSON implements the json.Unmarshaler interface
-func (m *PhishermanTime) UnmarshalJSON(data []byte) error {
+func (m *Time) UnmarshalJSON(data []byte) error {
 	// Ignore null, like in the main JSON package.
 	if string(data) == "null" || string(data) == `""` {
 		return nil
 	}
 	// Fractional seconds are handled implicitly by Parse.
 	tt, err := time.Parse(`"`+time.RFC3339+`"`, string(data))
-	*m = PhishermanTime{tt}
+	*m = Time{tt}
 	return err
 }

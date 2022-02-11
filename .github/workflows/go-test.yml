@@ -16,8 +16,8 @@ jobs:
         with:
           go-version: 1.17
 
-      - name: go build
-        run: go build tests/main.go
+      - name: go lint
+        run: golint ./...
 
   govet:
     # We want to run on external PRs, but not on our own internal PRs as they'll be run

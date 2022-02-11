@@ -1,4 +1,4 @@
-package phisherman_api
+package phisherman
 
 import (
 	"errors"
