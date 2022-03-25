@@ -12,6 +12,10 @@ const (
 	Safe       Classification = "safe"
 )
 
+var _ = Suspicious
+var _ = Malicious
+var _ = Safe
+
 // CheckDomainResponse is the response from the check domain endpoint
 type CheckDomainResponse struct {
 	Classification Classification `json:"classification"`

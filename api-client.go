@@ -2,7 +2,6 @@ package phisherman
 
 import (
 	"errors"
-	"net/url"
 	"strings"
 
 	"github.com/go-resty/resty/v2"
@@ -20,55 +19,46 @@ func MakeClient() *Client {
 	}
 }
 
+var _ = MakeClient()
+
 func processResponse(resp *resty.Response, err error) (*resty.Response, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	if !resp.IsSuccess() {
 		return nil, errors.New("unexpected response code (" + resp.Status() + "), body:" + resp.String())
 	}
-
 	return resp, nil
 }
 
 // CheckDomain returns the CheckDomainResponse for a given domain.
 // The domain should not include a http(s):// prefix, or a path.
-func (c *Client) CheckDomain(domain string, endUserToken string) (*CheckDomainResponse, error) {
+func (c *Client) CheckDomain(domain string, endUserToken string) (r *CheckDomainResponse, err error) {
 	if domain == "" {
 		return nil, errors.New("missing domain")
 	}
-	if strings.Index(domain, "://") == -1 {
-		domain = "https://" + domain
-	}
-	u, err := url.Parse(domain)
-	if err != nil {
-		return nil, err
-	}
-	var r CheckDomainResponse
 	_, err = processResponse(c.client.R().
 		SetHeader("Authorization", "Bearer "+endUserToken).
-		SetResult(&r).
-		Get(strings.Replace(CheckDomainRoute, "{domain}", u.Host, 1)))
-
-	return &r, err
+		SetResult(r).
+		Get(strings.Replace(CheckDomainRoute, "{domain}", domain, 1)))
+	return
 }
 
 // FetchDomainInfo returns the FetchDomainInfoResponse for a given domain
 // The domain should not include a http(s):// prefix, or a path.
-func (c *Client) FetchDomainInfo(domain string, endUserToken string) (*FetchDomainInfoResponse, error) {
+func (c *Client) FetchDomainInfo(domain string, endUserToken string) (r *FetchDomainInfoResponse, err error) {
 	if domain == "" {
 		return nil, errors.New("missing domain")
 	}
 	var d map[string]FetchDomainInfoResponse
-	if _, err := processResponse(c.client.R().
+	if _, err = processResponse(c.client.R().
 		SetHeader("Authorization", "Bearer "+endUserToken).
 		SetResult(&d).
 		Get(strings.Replace(FetchDomainRoute, "{domain}", domain, 1))); err != nil {
-		return nil, err
+		return
 	}
-	r := d[domain]
-	return &r, nil
+	*r = d[domain]
+	return
 }
 
 // ReportCaughtPhish allows you to submit metrics for a given domain. This is not required for the API to work, but is

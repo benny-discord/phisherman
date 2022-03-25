@@ -1,4 +1,4 @@
-module github.com/benny-discord/phisherman-api
+module github.com/benny-discord/phisherman
 
 go 1.17
 

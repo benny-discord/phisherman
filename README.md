@@ -3,19 +3,18 @@
 ## Installation
 Requires Go modules to function
 
-`go get github.com/benny-discord/phisherman-api`
+`go get github.com/benny-discord/phisherman`
 
 ## Usage
 ```go
 package main
 
 import (
-    phish "github.com/benny-discord/phisherman-api"
+    "github.com/benny-discord/phisherman"
 )
 
 func main() {
-    key := "MY_API_KEY"
-    client := phish.MakeClient()
+    client := phisherman.MakeClient()
 }
 ```
 

@@ -18,3 +18,7 @@ const (
 	VerifiedDomain   string = "verified.test.phisherman.gg"
 	UnknownDomain    string = "unknown.test.phisherman.gg"
 )
+
+var _ = SuspiciousDomain
+var _ = VerifiedDomain
+var _ = UnknownDomain
